@@ -42,7 +42,11 @@ class GBTextField: UITextField {
     var titleLabelColor: UIColor = .darkGray
     
     @IBInspectable
-    var lineColor: UIColor = .darkGray
+    var lineColor: UIColor = .darkGray{
+        didSet{
+            self.viewLine.backgroundColor = lineColor
+        }
+    }
     
     @IBInspectable
     var selectedTitleColor: UIColor = .blue
@@ -51,7 +55,11 @@ class GBTextField: UITextField {
     var selectedLineColor: UIColor = .blue
     
     @IBInspectable
-    var errorColor: UIColor = .red
+    var errorColor: UIColor = .red{
+        didSet{
+            self.labelError.textColor = errorColor
+        }
+    }
     
     @IBInspectable
     var rightImage: UIImage?{
@@ -126,7 +134,6 @@ class GBTextField: UITextField {
     private lazy var viewLine:UIView = {
         let prntView = UIView()
         prntView.translatesAutoresizingMaskIntoConstraints = false
-        prntView.backgroundColor = lineColor
         return prntView
     }()
     
@@ -142,11 +149,9 @@ class GBTextField: UITextField {
     private lazy var labelError: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.textColor = errorColor
         lbl.font = self.font
         lbl.textAlignment = .right
         lbl.numberOfLines = 0
-        lbl.textColor = errorColor
         lbl.font = UIFont.boldSystemFont(ofSize: 12)
         return lbl
     }()

@@ -14,6 +14,7 @@
 		1808E4722166758E00689674 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1808E4702166758E00689674 /* LaunchScreen.storyboard */; };
 		1808E47D2166758E00689674 /* GBFloatingTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1808E47C2166758E00689674 /* GBFloatingTextFieldTests.swift */; };
 		1808E4882166758E00689674 /* GBFloatingTextFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1808E4872166758E00689674 /* GBFloatingTextFieldUITests.swift */; };
+		18AE7E7B2168C98C006B844F /* GBTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AE7E7A2168C98C006B844F /* GBTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		1808E4832166758E00689674 /* GBFloatingTextFieldUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GBFloatingTextFieldUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1808E4872166758E00689674 /* GBFloatingTextFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBFloatingTextFieldUITests.swift; sourceTree = "<group>"; };
 		1808E4892166758E00689674 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18AE7E7A2168C98C006B844F /* GBTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GBTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				1808E4672166758C00689674 /* AppDelegate.swift */,
 				1808E4692166758C00689674 /* ViewController.swift */,
+				18AE7E7A2168C98C006B844F /* GBTextField.swift */,
 				1808E46B2166758D00689674 /* Main.storyboard */,
 				1808E46E2166758E00689674 /* Assets.xcassets */,
 				1808E4702166758E00689674 /* LaunchScreen.storyboard */,
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18AE7E7B2168C98C006B844F /* GBTextField.swift in Sources */,
 				1808E46A2166758C00689674 /* ViewController.swift in Sources */,
 				1808E4682166758C00689674 /* AppDelegate.swift in Sources */,
 			);

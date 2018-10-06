@@ -10,8 +10,11 @@ import UIKit
 
 @objc protocol GBTextFieldDelegate: class
 {
-    @objc optional func gbView(_ textField: UITextField?,_ selectedView: UIView?)
+    @objc optional func gbLeftView(_ textField: GBTextField?)
+    @objc optional func gbRightView(_ textField: GBTextField?)
 }
+
+typealias GBFloatingDelegate = GBTextFieldDelegate & UITextFieldDelegate
 
 @IBDesignable
 class GBTextField: UITextField {
@@ -53,16 +56,19 @@ class GBTextField: UITextField {
     @IBInspectable
     var rightImage: UIImage?{
         didSet{
-            let viewRight = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.size.height, height: self.frame.size.height))
-            viewRight.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewSelected(_:))))
+            viewRight = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.size.height, height: self.frame.size.height))
+            if rightImageClicable{
+                viewRight!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(rightViewSelected(_:))))
+            }
             let imageView = UIImageView(image: rightImage)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             imageView.isUserInteractionEnabled = true
-            viewRight.addSubview(imageView)
-            imageView.topAnchor.constraint(equalTo: viewRight.topAnchor, constant: 10).isActive = true
-            imageView.leftAnchor.constraint(equalTo: viewRight.leftAnchor, constant: 10).isActive = true
-            imageView.bottomAnchor.constraint(equalTo: viewRight.bottomAnchor, constant: -10).isActive = true
-            imageView.rightAnchor.constraint(equalTo: viewRight.rightAnchor, constant: -10).isActive = true
+            viewRight?.addSubview(imageView)
+            
+            imageView.topAnchor.constraint(equalTo: viewRight!.topAnchor, constant: 7).isActive = true
+            imageView.leftAnchor.constraint(equalTo: viewRight!.leftAnchor, constant: 7).isActive = true
+            imageView.bottomAnchor.constraint(equalTo: viewRight!.bottomAnchor, constant: -7).isActive = true
+            imageView.rightAnchor.constraint(equalTo: viewRight!.rightAnchor, constant: -7).isActive = true
             imageView.clipsToBounds = true
             imageView.contentMode = .scaleAspectFit
             self.rightView = viewRight
@@ -73,18 +79,21 @@ class GBTextField: UITextField {
     @IBInspectable
     var leftImage: UIImage?{
         didSet{
-            let viewLeft = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.size.height, height: self.frame.size.height))
-            viewLeft.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewSelected(_:))))
-
-            let imageView = UIImageView(image: rightImage)
+            viewLeft = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.size.height, height: self.frame.size.height))
+            if leftImageClicable{
+                if viewLeft != nil{
+                    viewLeft?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(leftViewSelected(_:))))
+                }
+            }
+            let imageView = UIImageView(image: leftImage)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             imageView.isUserInteractionEnabled = true
-            viewLeft.addSubview(imageView)
+            viewLeft?.addSubview(imageView)
             
-            imageView.topAnchor.constraint(equalTo: viewLeft.topAnchor, constant: 10).isActive = true
-            imageView.leftAnchor.constraint(equalTo: viewLeft.leftAnchor, constant: 10).isActive = true
-            imageView.bottomAnchor.constraint(equalTo: viewLeft.bottomAnchor, constant: -10).isActive = true
-            imageView.rightAnchor.constraint(equalTo: viewLeft.rightAnchor, constant: -10).isActive = true
+            imageView.topAnchor.constraint(equalTo: viewLeft!.topAnchor, constant: 7).isActive = true
+            imageView.leftAnchor.constraint(equalTo: viewLeft!.leftAnchor, constant: 7).isActive = true
+            imageView.bottomAnchor.constraint(equalTo: viewLeft!.bottomAnchor, constant: -7).isActive = true
+            imageView.rightAnchor.constraint(equalTo: viewLeft!.rightAnchor, constant: -7).isActive = true
             imageView.clipsToBounds = true
             imageView.contentMode = .scaleAspectFit
             self.leftView = viewLeft
@@ -92,13 +101,28 @@ class GBTextField: UITextField {
         }
     }
     
-//MARK:-  Private Properties
-    @objc func viewSelected(_ gesture:UITapGestureRecognizer){
-        let textField = gesture.view?.superview as? UITextField
-        self.gbTextFieldDelegate?.gbView!(textField, gesture.view)
+    var rightImageClicable: Bool = false{
+        didSet{
+            if rightImageClicable{
+                viewRight?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(rightViewSelected(_:))))
+            }
+        }
     }
-
     
+    var leftImageClicable: Bool = false{
+        didSet{
+            if leftImageClicable{
+                viewLeft?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(leftViewSelected(_:))))
+            }
+        }
+    }
+    
+//MARK:-  Public Function
+    
+//MARK:-  Private Properties
+    private var viewRight: UIView?
+    private var viewLeft: UIView?
+
     private lazy var viewLine:UIView = {
         let prntView = UIView()
         prntView.translatesAutoresizingMaskIntoConstraints = false
@@ -180,6 +204,26 @@ class GBTextField: UITextField {
     }
     
 //MARK:-  Private Functions
+    
+    @objc func rightViewSelected(_ gesture: UITapGestureRecognizer){
+        let textField = gesture.view?.superview as? GBTextField
+        if self.gbTextFieldDelegate?.gbRightView?(textField) != nil{
+            self.gbTextFieldDelegate?.gbRightView!(textField)
+        }else{
+            self.showErrorMessage("Please implement right GBFloatingTextField Delegate")
+        }
+    }
+    
+    @objc func leftViewSelected(_ gesture: UITapGestureRecognizer){
+        let textField = gesture.view?.superview as? GBTextField
+        if self.gbTextFieldDelegate?.gbLeftView?(textField) != nil{
+            self.gbTextFieldDelegate?.gbLeftView!(textField)
+        }else{
+            self.showErrorMessage("Please implement left GBFloatingTextField Delegate")
+            //print("NIL")
+        }
+    }
+    
     private func addViews(){
         self.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         for subView in self.subviews{
@@ -226,7 +270,7 @@ class GBTextField: UITextField {
         labelError.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
-    override func becomeFirstResponder() -> Bool {
+    override internal func becomeFirstResponder() -> Bool {
         self.labelPlaceholder.text = placeholder
         if selectedLineHeight == 0{
             constraintLineHeight?.constant = lineHeight
